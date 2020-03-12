@@ -29,12 +29,12 @@ version :: Version
 version = Version [0,0,0,0] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
-bindir     = "/Users/vladimir/Desktop/msu/Haskel/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/bin"
-libdir     = "/Users/vladimir/Desktop/msu/Haskel/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/lib/x86_64-osx-ghc-8.6.5/project-template-0.0.0.0-FZdUeqzDIGm56iRic8Z6pm-saper"
-dynlibdir  = "/Users/vladimir/Desktop/msu/Haskel/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/lib/x86_64-osx-ghc-8.6.5"
-datadir    = "/Users/vladimir/Desktop/msu/Haskel/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/share/x86_64-osx-ghc-8.6.5/project-template-0.0.0.0"
-libexecdir = "/Users/vladimir/Desktop/msu/Haskel/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/libexec/x86_64-osx-ghc-8.6.5/project-template-0.0.0.0"
-sysconfdir = "/Users/vladimir/Desktop/msu/Haskel/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/etc"
+bindir     = "/Users/vladimir/Desktop/Github/examplecode/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/bin"
+libdir     = "/Users/vladimir/Desktop/Github/examplecode/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/lib/x86_64-osx-ghc-8.6.5/project-template-0.0.0.0-EAwOkPl9OBWFIUvDQaD8dZ-saper"
+dynlibdir  = "/Users/vladimir/Desktop/Github/examplecode/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/lib/x86_64-osx-ghc-8.6.5"
+datadir    = "/Users/vladimir/Desktop/Github/examplecode/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/share/x86_64-osx-ghc-8.6.5/project-template-0.0.0.0"
+libexecdir = "/Users/vladimir/Desktop/Github/examplecode/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/libexec/x86_64-osx-ghc-8.6.5/project-template-0.0.0.0"
+sysconfdir = "/Users/vladimir/Desktop/Github/examplecode/Saper/.stack-work/install/x86_64-osx/cd1ef797d37a91f2225d2b62785257aa160c6fe084b36dadfb0a318ab4c2c676/8.6.5/etc"
 
 getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: IO FilePath
 getBinDir = catchIO (getEnv "project_template_bindir") (\_ -> return bindir)

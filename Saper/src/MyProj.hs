@@ -1,5 +1,5 @@
 module MyProj
-    ( runField
+    ( start
     ) where
 
 import System.Random
@@ -34,7 +34,7 @@ createField :: Field
 createField = Data.Map.empty
 
 createMines :: RandomGen g => g -> Cell -> Mines
-createMines g fst = Data.Set.fromList $ Data.Set.take mineCount $ shuffle g $
+createMines g fst = Data.Set.fromList $ Prelude.take mineCount $ shuffle g $
     [(i, j) | i <- [0 .. row - 1]
             , j <- [0 .. col - 1]
             , (i, j) /= fst]
@@ -42,14 +42,16 @@ createMines g fst = Data.Set.fromList $ Data.Set.take mineCount $ shuffle g $
 shuffle :: RandomGen gen => gen -> [a] -> [a]
 shuffle g l = shuffle' l (row * col - 1) g
 
+start :: IO()
+start = startGame (mkStdGen 10) 
 
 startGame :: StdGen -> IO ()
-startGame gen = play (InWindow windowSize (240, 160)) (greyN 0.25) 30 (initState gen) renderer handler updater
+startGame gen = play (InWindow "Saper" windowSize (240, 160)) (greyN 0.25) 30 (initState gen) renderer handler updater
 
 windowSize = both (* (round cellSize)) fieldSize
 cellSize = 24
 
-initState gen = Gs createField (Left gen)
+initState gen = GS createField (Left gen)
 
 both f (a, b) = (f a, f b)
 
