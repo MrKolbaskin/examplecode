@@ -8,6 +8,8 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import Graphics.Gloss.Data.ViewPort
 
+countOpenCells ::  Field -> Int
+countOpenCells f = Data.Map.size (Data.Map.filter (/= Flag) f)
 
 handler :: Event -> GameState -> GameState
 
@@ -19,20 +21,20 @@ handler (EventKey (MouseButton LeftButton) Down x mouse) gs@GS
 handler (EventKey (MouseButton LeftButton) Down _ mouse) gs@GS
     { field = field
     , mines = Right mines
-    , gameOver = False
+    , gameOver = Process
     } = gs
     { field = newField
     , gameOver = exploded
     } where
     newField = click cell field
-    exploded = case Data.Map.lookup cell newField of --Проигрыш, если последняя вскрытая клетка - мина
-        Just Mine -> True
-        _         -> False
+    exploded = if Data.Map.lookup cell newField == Just Mine then Lose
+                                                  else if countOpenCells newField >= clearCells then Win
+                                                  else Process
     cell@(cx, cy) = screenToCell mouse
     click :: Cell -> Field -> Field
     click c@(cx, cy) f
-        | c `Data.Map.member` f     = f --повторно клетку не обрабатываем
-        | c `Data.Set.member` mines = put Mine --попались на мину
+        | Data.Map.member c f     = f --повторно клетку не обрабатываем
+        | Data.Set.member c mines = put Mine --попались на мину
         | otherwise = let nf = put (Opened neighbours) in
             if neighbours == 0
                 then Prelude.foldr click nf neighbourCells --Обойдём соседей
@@ -58,7 +60,7 @@ screenToCell = both (round . (/ cellSize)) . invertViewPort viewPort
 
 renderer GS 
     { field = field
-    , gameOver = False
+    , gameOver = Process
     } = applyViewPortToPicture viewPort $ pictures $ cells ++ grid where
     grid = [uncurry translate (cellToScreen (x, y)) $ color black $ rectangleWire cellSize cellSize | x <- [0 .. fieldWidth - 1], y <- [0 .. fieldHeight - 1]]
     cells = [uncurry translate (cellToScreen (x, y)) $ drawCell x y | x <- [0 .. fieldWidth - 1], y <- [0 .. fieldHeight - 1]]
@@ -75,7 +77,10 @@ renderer GS
                                     ]
     label = translate (-5) (-5) . scale 0.15 0.15 . color black . text
 
-renderer GS {gameOver = True} = applyViewPortToPicture viewPort (label "You Lose") where
+renderer GS {gameOver = Lose} = applyViewPortToPicture viewPort (label "You Lose") where
+    label = translate (20) (120) . scale 0.5 0.5 . color red . text
+
+renderer GS {gameOver = Win} = applyViewPortToPicture viewPort (label "Good job!") where
     label = translate (20) (120) . scale 0.5 0.5 . color red . text
 
 viewPort = ViewPort (both (negate . (/ 2) . (subtract cellSize)) $ cellToScreen fieldSize) 0 1
