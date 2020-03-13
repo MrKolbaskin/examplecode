@@ -42,7 +42,7 @@ handler (EventKey (MouseButton LeftButton) Down _ mouse) gs@GS
             neighbourCells = [ (i, j) | i <- [cx - 1 .. cx + 1], j <- [cy - 1 .. cy + 1]
                              , 0 <= i && i < fieldWidth
                              , 0 <= j && j < fieldHeight
-                             ] --Жаль, нельзя написать 0 <= i < fieldWidth
+                             ]
             neighbours = length $ Prelude.filter (`Data.Set.member` mines) neighbourCells
 
 
@@ -56,7 +56,10 @@ handler (EventKey (MouseButton RightButton) Down _ mouse) gs@GS
 handler _ gs = gs
 screenToCell = both (round . (/ cellSize)) . invertViewPort viewPort
 
-renderer GS { field = field } = applyViewPortToPicture viewPort $ pictures $ cells ++ grid where
+renderer GS 
+    { field = field
+    , gameOver = False
+    } = applyViewPortToPicture viewPort $ pictures $ cells ++ grid where
     grid = [uncurry translate (cellToScreen (x, y)) $ color black $ rectangleWire cellSize cellSize | x <- [0 .. fieldWidth - 1], y <- [0 .. fieldHeight - 1]]
     cells = [uncurry translate (cellToScreen (x, y)) $ drawCell x y | x <- [0 .. fieldWidth - 1], y <- [0 .. fieldHeight - 1]]
     drawCell x y = case Data.Map.lookup (x, y) field of
@@ -71,6 +74,9 @@ renderer GS { field = field } = applyViewPortToPicture viewPort $ pictures $ cel
                                     , label "?"
                                     ]
     label = translate (-5) (-5) . scale 0.15 0.15 . color black . text
+
+renderer GS {gameOver = True} = applyViewPortToPicture viewPort (label "You Lose") where
+    label = translate (20) (120) . scale 0.5 0.5 . color red . text
 
 viewPort = ViewPort (both (negate . (/ 2) . (subtract cellSize)) $ cellToScreen fieldSize) 0 1
 
