@@ -9,7 +9,7 @@ type Cell = (Int, Int)
 type Mines = Set Cell
 
 data CellState = Opened Int --Открыта; параметр — циферка, которая будет отображаться
-     			| Mine       --Подорвались; без параметров
+                | Mine       --Подорвались; без параметров
                 | Flag deriving (Eq)      --Поставлен флажок
 
 data GameOver = Process
@@ -33,4 +33,4 @@ clearCells :: Int
 clearCells = fieldHeight * fieldWidth - mineCount
 
 cellSize :: Float
-cellSize = 24
+cellSize = 30

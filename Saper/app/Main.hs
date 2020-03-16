@@ -12,7 +12,7 @@ main = do
     startGame gen
 
 startGame :: StdGen -> IO ()
-startGame gen = play (InWindow "Hsweeper" windowSize (240, 160)) white 30 (initState gen) renderer handler updater
+startGame gen = play (InWindow "Hsweeper" windowSize (1024, 768)) (greyN 0.1) 30 (initState gen) renderer handler updater
 
 updater _ = id
 

@@ -45,7 +45,7 @@ handler (EventKey (MouseButton LeftButton) Down _ mouse) gs@GS
                              , 0 <= i && i < fieldWidth
                              , 0 <= j && j < fieldHeight
                              ]
-            neighbours = length $ Prelude.filter (`Data.Set.member` mines) neighbourCells
+            neighbours = length (Prelude.filter (`Data.Set.member` mines) neighbourCells)
 
 
 handler (EventKey (MouseButton RightButton) Down _ mouse) gs@GS
@@ -61,29 +61,29 @@ screenToCell = both (round . (/ cellSize)) . invertViewPort viewPort
 renderer GS 
     { field = field
     , gameOver = Process
-    } = applyViewPortToPicture viewPort $ pictures $ cells ++ grid where
-    grid = [uncurry translate (cellToScreen (x, y)) $ color black $ rectangleWire cellSize cellSize | x <- [0 .. fieldWidth - 1], y <- [0 .. fieldHeight - 1]]
-    cells = [uncurry translate (cellToScreen (x, y)) $ drawCell x y | x <- [0 .. fieldWidth - 1], y <- [0 .. fieldHeight - 1]]
+    } = applyViewPortToPicture viewPort (pictures (cells ++ grid)) where
+    grid = [uncurry translate (cellToScreen (x, y)) (color white (rectangleWire cellSize cellSize)) | x <- [0 .. fieldWidth - 1], y <- [0 .. fieldHeight - 1]]
+    cells = [uncurry translate (cellToScreen (x, y)) (drawCell x y) | x <- [0 .. fieldWidth - 1], y <- [0 .. fieldHeight - 1]]
     drawCell x y = case Data.Map.lookup (x, y) field of
-        Nothing         -> color white $ rectangleSolid cellSize cellSize --клетка пустая
-        Just Mine       -> pictures [ color red $ rectangleSolid cellSize cellSize
+        Nothing         -> color (greyN 0.1) (rectangleSolid cellSize cellSize)--клетка пустая
+        Just Mine       -> pictures [ color red (rectangleSolid cellSize cellSize)
                                     , label "@"
                                     ]
-        Just (Opened n) -> pictures [ color green $ rectangleSolid cellSize cellSize
+        Just (Opened n) -> pictures [ color (greyN 0.85) (rectangleSolid cellSize cellSize)
                                     , label (show n)
                                     ]
-        Just Flag       -> pictures [ color yellow $ rectangleSolid cellSize cellSize
+        Just Flag       -> pictures [ color orange (rectangleSolid cellSize cellSize)
                                     , label "?"
                                     ]
     label = translate (-5) (-5) . scale 0.15 0.15 . color black . text
 
 renderer GS {gameOver = Lose} = applyViewPortToPicture viewPort (label "You Lose") where
-    label = translate (20) (120) . scale 0.5 0.5 . color red . text
+    label = translate (50) (190) . scale 0.5 0.5 . color red . text
 
 renderer GS {gameOver = Win} = applyViewPortToPicture viewPort (label "Good job!") where
-    label = translate (20) (120) . scale 0.5 0.5 . color red . text
+    label = translate (50) (190) . scale 0.5 0.5 . color green . text
 
-viewPort = ViewPort (both (negate . (/ 2) . (subtract cellSize)) $ cellToScreen fieldSize) 0 1
+viewPort = ViewPort (both (negate . (/ 2) . (subtract cellSize)) (cellToScreen fieldSize)) 0 1
 
 cellToScreen = both ((* cellSize) . fromIntegral)
 
