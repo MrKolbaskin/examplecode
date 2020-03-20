@@ -11,7 +11,7 @@ createField = Data.Map.empty
 
 shuffle g l = shuffle' l (fieldWidth * fieldHeight - 1) g
 
-initState gen = GS createField (Left gen) Process
+initState gen = GS createField (Left gen) Process gen
 
 createMines :: RandomGen g => g -> Cell -> Mines
 createMines g fst = Data.Set.fromList $ Prelude.take mineCount (shuffle g (

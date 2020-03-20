@@ -7,11 +7,19 @@ import Data.Set
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import Graphics.Gloss.Data.ViewPort
+import System.Random
 
 countOpenCells ::  Field -> Int
 countOpenCells f = Data.Map.size (Data.Map.filter (/= Flag) f)
 
 handler :: Event -> GameState -> GameState
+
+startGame :: StdGen -> IO ()
+startGame gen = play (InWindow "Hsweeper" windowSize (1024, 768)) (greyN 0.1) 30 (initState gen) renderer handler updater
+
+updater _ = id
+
+windowSize = both (* (round cellSize)) fieldSize
 
 handler (EventKey (MouseButton LeftButton) Down x mouse) gs@GS
     { mines = Left gen
@@ -55,6 +63,16 @@ handler (EventKey (MouseButton RightButton) Down _ mouse) gs@GS
         Just Flag -> gs { field = Data.Map.delete coord field }
         _ -> gs
         where coord = screenToCell mouse
+
+handler (EventKey (SpecialKey KeyF1) Down _ _) gs@GS
+    { generator = gen } = gs
+    { field = createField
+    , mines = Left gen'
+    , gameOver = Process
+    , generator = gen'
+    } where
+        gen' = snd (next gen)
+
 handler _ gs = gs
 screenToCell = both (round . (/ cellSize)) . invertViewPort viewPort
 
@@ -76,6 +94,7 @@ renderer GS
                                     , label "?"
                                     ]
     label = translate (-5) (-5) . scale 0.15 0.15 . color black . text
+
 
 renderer GS {gameOver = Lose} = applyViewPortToPicture viewPort (label "You Lose") where
     label = translate (50) (190) . scale 0.5 0.5 . color red . text

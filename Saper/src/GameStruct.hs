@@ -20,6 +20,7 @@ data GameState = GS
     { field    :: Field
     , mines    :: Either StdGen Mines
     , gameOver :: GameOver
+    , generator :: StdGen
     }
 
 
