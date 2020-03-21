@@ -12,14 +12,22 @@ import System.Random
 countOpenCells ::  Field -> Int
 countOpenCells f = Data.Map.size (Data.Map.filter (/= Flag) f)
 
+countFlags ::  Field -> Int
+countFlags f = Data.Map.size (Data.Map.filter (== Flag) f)
+
 handler :: Event -> GameState -> GameState
 
+renderer :: GameState -> Picture
+
 startGame :: StdGen -> IO ()
-startGame gen = play (InWindow "Hsweeper" windowSize (1024, 768)) (greyN 0.1) 30 (initState gen) renderer handler updater
+startGame gen = play (InWindow "SAPER" windowSize (10, 10)) (greyN 0.1) 30 (initState gen) renderer handler updater
 
 updater _ = id
 
-windowSize = both (* (round cellSize)) fieldSize
+windowSize:: (Int, Int)
+windowSize = (x,y) where
+    x = (fst fieldSize) * (round cellSize) + 10
+    y = (snd fieldSize + 4) * (round cellSize)
 
 handler (EventKey (MouseButton LeftButton) Down x mouse) gs@GS
     { mines = Left gen
@@ -78,14 +86,14 @@ screenToCell = both (round . (/ cellSize)) . invertViewPort viewPort
 
 renderer GS 
     { field = field
-    , gameOver = Process
-    } = applyViewPortToPicture viewPort (pictures (cells ++ grid)) where
+    , gameOver = gameOver
+    } = applyViewPortToPicture viewPort (pictures (cells ++ grid ++ [drawUpText gameOver] ++ [drawTypeF1])) where
     grid = [uncurry translate (cellToScreen (x, y)) (color white (rectangleWire cellSize cellSize)) | x <- [0 .. fieldWidth - 1], y <- [0 .. fieldHeight - 1]]
     cells = [uncurry translate (cellToScreen (x, y)) (drawCell x y) | x <- [0 .. fieldWidth - 1], y <- [0 .. fieldHeight - 1]]
     drawCell x y = case Data.Map.lookup (x, y) field of
         Nothing         -> color (greyN 0.1) (rectangleSolid cellSize cellSize)--клетка пустая
         Just Mine       -> pictures [ color red (rectangleSolid cellSize cellSize)
-                                    , label "@"
+                                    , label "X"
                                     ]
         Just (Opened n) -> pictures [ color (greyN 0.85) (rectangleSolid cellSize cellSize)
                                     , label (show n)
@@ -93,18 +101,28 @@ renderer GS
         Just Flag       -> pictures [ color orange (rectangleSolid cellSize cellSize)
                                     , label "?"
                                     ]
-    label = translate (-5) (-5) . scale 0.15 0.15 . color black . text
+    label = translate (-5) (-5) . scale 0.15 0.15 . color black . text                                    
+    drawUpText s = case s of
+        Process -> drawScore (countFlags field)
+        Win     -> translate 105 (fromIntegral fieldHeight * cellSize ) (scale 0.35 0.35 ( color green (text "Good job!")))
+        Lose    -> translate 110 (fromIntegral fieldHeight * cellSize ) (scale 0.35 0.35 ( color red (text "You lose")))
 
-
-renderer GS {gameOver = Lose} = applyViewPortToPicture viewPort (label "You Lose") where
-    label = translate (50) (190) . scale 0.5 0.5 . color red . text
-
-renderer GS {gameOver = Win} = applyViewPortToPicture viewPort (label "Good job!") where
-    label = translate (50) (190) . scale 0.5 0.5 . color green . text
-
+viewPort :: ViewPort 
 viewPort = ViewPort (both (negate . (/ 2) . (subtract cellSize)) (cellToScreen fieldSize)) 0 1
 
 cellToScreen = both ((* cellSize) . fromIntegral)
 
 both :: (a -> b) -> (a, a) -> (b, b)
 both f (a, b) = (f a, f b) 
+
+drawScore :: Int -> Picture
+drawScore flags = translate w h (scale 0.3 0.3 (color (greyN 0.85) (text scoreString))) where
+    scoreString = ("Mines: " ++ (show flags) ++ "/"  ++ (show mineCount))
+    w = (fromIntegral fieldWidth * cellSize) / 4
+    h = fromIntegral fieldHeight * cellSize
+
+drawTypeF1 :: Picture
+drawTypeF1 = translate w h (scale 0.3 0.3 (color (greyN 0.85) (text myString))) where
+    myString = "To restart press F1"
+    w = 0.7 * cellSize
+    h = - 2 * cellSize

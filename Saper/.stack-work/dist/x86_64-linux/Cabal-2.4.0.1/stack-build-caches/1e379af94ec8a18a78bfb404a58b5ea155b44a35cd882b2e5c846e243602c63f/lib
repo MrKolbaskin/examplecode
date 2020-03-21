@@ -1,20 +1,20 @@
 /home/alex/PRAK/Haskell/examplecode/Saper/project-template.cabal:
   hash: b6d372fe2b97d2f077aeae0a02977e6b3ad48ff4fef725a8467200eebed58bba
   size: 1275
-  modtime: 1584118449
+  modtime: 1584722622
 /home/alex/PRAK/Haskell/examplecode/Saper/src/GameInit.hs:
-  hash: ea2ed8988f8db6bf1cd0286accb389a8c767dc2238c0074d7c5b4bba7cae05e3
-  size: 534
-  modtime: 1584123765
+  hash: 52f4d9021f8a77dad3a38e4681df6b773d8c8a0276cd996a4b33bc5d094034be
+  size: 614
+  modtime: 1584804413
 /home/alex/PRAK/Haskell/examplecode/Saper/README.md:
   hash: 762e05d12533fd836cda182055c83dcda6593a1eb00da7ba3af2bcc71314196b
   size: 739
-  modtime: 1584000968
+  modtime: 1584722622
 /home/alex/PRAK/Haskell/examplecode/Saper/src/GameAction.hs:
-  hash: e3537d57330a79d3ffbb6ee8e501ffe652e9267b8338c53569175e47dcf79079
-  size: 4006
-  modtime: 1584134977
+  hash: 0a282491566a2d1d2da081bae8d549e1b32a694dccbf2b6d9fa1064aba56aede
+  size: 5279
+  modtime: 1584803751
 /home/alex/PRAK/Haskell/examplecode/Saper/src/GameStruct.hs:
-  hash: c88238b5b0c52bec57a98c2dbed149d44ad57c098b57fa53029d6bacbd05fe11
-  size: 812
-  modtime: 1584135032
+  hash: 0c874301f9be2b348aac537ead531388879fdfe1d4da468df065f58d491dbfd7
+  size: 848
+  modtime: 1584804431

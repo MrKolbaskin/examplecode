@@ -28,7 +28,7 @@ fieldSize :: (Int, Int)
 fieldSize@(fieldWidth, fieldHeight) = (15, 15)
 
 mineCount :: Int
-mineCount = 4
+mineCount = 10
 
 clearCells :: Int
 clearCells = fieldHeight * fieldWidth - mineCount
